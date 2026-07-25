@@ -1,0 +1,39 @@
+{
+  "name": "page-forge-backend",
+  "version": "1.0.0",
+  "description": "Backend services for Page Forge PDF Toolkit",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1068.0",
+    "@aws-sdk/s3-request-presigner": "^3.1068.0",
+    "@google/genai": "^1.52.0",
+    "@neondatabase/serverless": "^1.1.0",
+    "@pdfsmaller/pdf-decrypt": "^1.0.1",
+    "@pdfsmaller/pdf-encrypt": "^1.0.2",
+    "@prisma/adapter-neon": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "archiver": "^8.0.0",
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "docx": "^8.5.0",
+    "dotenv": "^17.4.2",
+    "express": "^4.19.2",
+    "express-rate-limit": "^8.5.2",
+    "helmet": "^8.2.0",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^1.4.5-lts.1",
+    "pdf-lib": "^1.17.1",
+    "pdf-parse": "^1.1.1",
+    "ws": "^8.21.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0",
+    "prisma": "^7.8.0"
+  }
+}

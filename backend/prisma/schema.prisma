@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email         String          @unique
+  password      String?
+  name          String?
+  avatar        String?
+  google_id     String?         @unique
+  provider      String?         @default("email")
+  created_at    DateTime?       @default(now()) @db.Timestamptz(6)
+  chat_sessions ChatSession[]
+  chunks        DocumentChunk[]
+  pdf_history   PdfHistory[]
+
+  @@map("users")
+}
+
+model PdfHistory {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id    String    @db.Uuid
+  filename   String
+  operation  String
+  file_url   String?
+  metadata   Json?
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  user       User      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([user_id], map: "idx_pdf_history_user_id")
+  @@map("pdf_history")
+}
+
+model DocumentChunk {
+  id          String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id     String                 @db.Uuid
+  session_id  String?                @db.Uuid
+  doc_name    String
+  chunk_index Int
+  chunk_text  String
+  embedding   Unsupported("vector")?
+  created_at  DateTime?              @default(now()) @db.Timestamptz(6)
+  user        User                   @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([session_id], map: "idx_chunks_session_id")
+  @@index([user_id], map: "idx_chunks_user_id")
+  @@map("document_chunks")
+}
+
+model ChatSession {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id    String    @db.Uuid
+  doc_name   String
+  messages   Json?     @default("[]")
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at DateTime? @default(now()) @db.Timestamptz(6)
+  user       User      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([user_id], map: "idx_chat_sessions_user_id")
+  @@map("chat_sessions")
+}

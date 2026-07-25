@@ -1,0 +1,12 @@
+# Backend
+node_modules/
+uploads/*
+!uploads/.gitkeep
+.env
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+/src/generated/prisma
