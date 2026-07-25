@@ -2,8 +2,7 @@
 
 > A full-stack, production-grade PDF processing platform with an AI document assistant, built with React, Node.js, PostgreSQL (Neon), and AWS S3. Deployed on AWS EC2 with Docker and CI/CD via GitHub Actions.
 
-**Live Demo:** [https://pageforge.ganeshdev.me](https://pageforge.ganeshdev.me)  
-**API Base:** [https://api.pageforge.ganeshdev.me](https://api.pageforge.ganeshdev.me)
+
 
 ---
 
@@ -579,4 +578,3 @@ MIT License — feel free to use and adapt for your own projects.
 
 ---
 
-*Built by [Ganesh Daware](https://ganeshdev.me)*
