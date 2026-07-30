@@ -132,7 +132,7 @@ export default function ChatPDF() {
       await fetchSessions();
     } catch (err) {
       console.error(err);
-      setError(err.response?.data?.error || 'Failed to process document. Please try again.');
+      setError(err.response?.data?.message || err.response?.data?.error || err.message || 'Failed to process document. Please try again.');
       setActiveFile(null);
     } finally {
       setLoading(false);
@@ -164,7 +164,7 @@ export default function ChatPDF() {
     setStreaming(true);
 
     try {
-      const url = `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/ai/chat/message`;
+      const url = `${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/ai/chat/message`;
       
       // Add a placeholder for assistant response
       setMessages(prev => [...prev, { role: 'assistant', content: '', timestamp: new Date().toISOString() }]);
@@ -183,8 +183,12 @@ export default function ChatPDF() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to send message.');
+        let errMsg = 'Failed to send message.';
+        try {
+          const errorData = await response.json();
+          errMsg = errorData.message || errorData.error || errMsg;
+        } catch (e) {}
+        throw new Error(errMsg);
       }
 
       const reader = response.body.getReader();
@@ -204,8 +208,8 @@ export default function ChatPDF() {
         
         const lines = chunk.split('\n');
         for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            const dataStr = line.substring(6).trim();
+          if (line.startsWith('data:')) {
+            const dataStr = line.substring(5).trim();
             if (dataStr === '[DONE]') {
               done = true;
               break;

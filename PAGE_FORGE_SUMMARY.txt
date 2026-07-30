@@ -1,0 +1,121 @@
+================================================================================
+                      PAGE-FORGE: PROJECT SUMMARY & ARCHITECTURE
+================================================================================
+
+1. SYSTEM OVERVIEW
+--------------------------------------------------------------------------------
+Frontend UI:  React 19 + Vite + Tailwind CSS v4 (Runs on http://localhost:5173)
+Backend API: Spring Boot 3.3.0 + Java 21 + MySQL (Runs on http://localhost:5001)
+Database:    MySQL (Database Name: jwt)
+AI Engine:   Google Gemini API (gemini-1.5-flash & text-embedding-004)
+
+
+2. BACKEND ARCHITECTURE (SpringBoot-BackEnd/)
+--------------------------------------------------------------------------------
+- Framework: Spring Boot 3.3.0 using 100% Pure Standard Java 21 (Lombok-free).
+- Database & ORM: MySQL (Database: jwt) with Spring Data JPA & Hibernate.
+- Primary Key Strategy: User entity uses numeric Long IDs (e.g., 1785050796271343).
+- Security & Auth: Spring Security 6, JJWT (jjwt-api 0.12.5), BCrypt hashing,
+  HTTP-only cookies + Authorization Bearer header support.
+- PDF Processing Engine: Apache PDFBox 3.0.2 & Apache POI 5.2.5.
+- Cloud & Local File Storage: AWS S3 SDK v2 with automatic fallback to local disk storage.
+
+
+3. FRONTEND ARCHITECTURE (frontend/)
+--------------------------------------------------------------------------------
+- Framework: React 19 + React Router DOM v6 + Vite 8.
+- Styling: Tailwind CSS v4, Lucide React Icons, Glassmorphism dark mode aesthetics.
+- Footer Watermark: "MADE WITH ♥ BY SUMIT"
+- Footer Tech Stack: "React · Tailwind CSS v4 · Spring Boot · MySQL · Gemini AI"
+- API Client: Custom Axios instance pointing to http://localhost:5001 with cookie support.
+
+
+4. DATABASE SCHEMA (MySQL Database: jwt)
+--------------------------------------------------------------------------------
+- users:
+    id (BIGINT, PRIMARY KEY)
+    email (VARCHAR 255, UNIQUE)
+    password (VARCHAR 255)
+    name (VARCHAR 255)
+    avatar (VARCHAR 255)
+    google_id (VARCHAR 255)
+    provider (VARCHAR 255)
+    created_at (DATETIME)
+
+- pdf_history:
+    id (VARCHAR 36, PRIMARY KEY)
+    user_id (BIGINT, FOREIGN KEY -> users.id)
+    filename (VARCHAR 255)
+    operation (VARCHAR 255)
+    file_url (VARCHAR 1000)
+    metadata (LONGTEXT)
+    created_at (DATETIME)
+
+- chat_sessions:
+    id (VARCHAR 36, PRIMARY KEY)
+    user_id (BIGINT, FOREIGN KEY -> users.id)
+    doc_name (VARCHAR 255)
+    messages (LONGTEXT)
+    created_at (DATETIME)
+    updated_at (DATETIME)
+
+- document_chunks:
+    id (VARCHAR 36, PRIMARY KEY)
+    user_id (BIGINT, FOREIGN KEY -> users.id)
+    session_id (VARCHAR 36)
+    doc_name (VARCHAR 255)
+    chunk_index (INT)
+    chunk_text (LONGTEXT)
+    embedding (LONGTEXT - Vector JSON)
+    created_at (DATETIME)
+
+
+5. COMPLETE FEATURE MATRIX & API ENDPOINTS
+--------------------------------------------------------------------------------
+[Authentication]
+  POST /api/auth/register    - Create new user account
+  POST /api/auth/login       - Log in and obtain JWT HTTP-only cookies
+  POST /api/auth/logout      - Log out and clear cookies
+  POST /api/auth/refresh     - Refresh access token
+  GET  /api/auth/me          - Retrieve current user session
+
+[PDF Tools]
+  POST /api/pdf/merge        - Merge multiple PDF files into one
+  POST /api/pdf/split        - Extract page ranges (PDF or ZIP download)
+  POST /api/pdf/organize     - Reorder, rotate, delete, or insert blank pages
+  POST /api/pdf/edit         - Overlay text, signatures, images, and shapes
+
+[Conversion]
+  POST /api/convert/word-to-pdf - Convert Word (.docx) to PDF
+  POST /api/convert/pdf-to-word - Convert PDF to Word (.docx)
+
+[Security]
+  POST /api/secure/protect   - Encrypt PDF with owner/user password
+  POST /api/secure/unlock    - Decrypt password-protected PDF
+
+[AI Features]
+  POST /api/ai/summarize     - Generate structured AI summary using Gemini 1.5 Flash
+  POST /api/ai/chat/upload   - Chunk PDF & generate vector embeddings (text-embedding-004)
+  POST /api/ai/chat/message  - Stream RAG vector-searched AI responses via SSE
+  GET  /api/ai/chat/sessions - List active AI PDF chat sessions
+  GET  /api/ai/chat/sessions/{id} - Get chat session details
+  DELETE /api/ai/chat/sessions/{id} - Delete chat session & vector chunks
+
+[Activity Audit History]
+  GET    /api/history        - Retrieve user operation history list
+  DELETE /api/history/{id}   - Delete specific history entry
+  DELETE /api/history        - Clear all user history entries
+
+
+6. HOW TO RUN THE PROJECT
+--------------------------------------------------------------------------------
+1) Start Spring Boot Backend:
+   cd SpringBoot-BackEnd
+   .\mvnw.cmd spring-boot:run
+   (Runs on http://localhost:5001)
+
+2) Start React Frontend:
+   cd frontend
+   npm run dev
+   (Runs on http://localhost:5173)
+================================================================================

@@ -228,8 +228,8 @@ export default function Dashboard() {
       <div className="relative z-10 mt-20 flex flex-col items-center gap-3">
         <div className="w-48 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
         <p className="text-[11px] tracking-widest uppercase text-slate-600 font-medium select-none">
-          Made with <span className="text-brand-500/60 mx-0.5">♥</span> by{' '}
-          <span className="text-brand-400/60 font-semibold">blckspidey</span>
+          Made with <span className="text-red-500/80 mx-0.5 text-xs">♥</span> by{' '}
+          <span className="text-brand-400/80 font-semibold">Sumit</span>
         </p>
       </div>
     </div>

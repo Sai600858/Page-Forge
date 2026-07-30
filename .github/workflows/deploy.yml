@@ -32,8 +32,8 @@ jobs:
       - name: Build and Push Backend Docker Image
         uses: docker/build-push-action@v5
         with:
-          context: ./backend
-          file: ./backend/Dockerfile
+          context: ./SpringBoot-BackEnd
+          file: ./SpringBoot-BackEnd/Dockerfile
           push: true
           tags: ${{ steps.clean.outputs.username }}/page-forge-backend:latest
           cache-from: type=gha
@@ -63,9 +63,9 @@ jobs:
             # Run the new container
             docker run -d \
               --name page-forge-backend \
-              -p 5000:5000 \
+              -p 5001:5001 \
               --restart always \
-              -v /var/www/uploads:/usr/src/app/uploads \
+              -v /var/www/uploads:/app/uploads \
               --env-file /home/${{ secrets.EC2_USERNAME }}/.env \
               $CLEAN_DOCKER_USERNAME/page-forge-backend:latest
               

@@ -1,0 +1,85 @@
+# ==============================================================================
+# PAGE FORGE SPRING BOOT BACKEND CONFIGURATION
+# ==============================================================================
+
+server:
+  port: ${PORT:5001}
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: page-forge-backend
+
+  # ----------------------------------------------------------------------------
+  # 1. DATABASE CONFIGURATION (MySQL)
+  # ----------------------------------------------------------------------------
+  # INSTRUCTIONS FOR USER DATABASE SETUP:
+  # 1) Start your local MySQL server or Cloud MySQL instance.
+  # 2) Create the database in MySQL console or Workbench:
+  #    CREATE DATABASE page_forge CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+  # 3) Replace the username and password below if different from 'root' / 'root'.
+  # -----------------------------------------------------------------------------
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/jwt?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:root}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  # ----------------------------------------------------------------------------
+  # 2. FILE UPLOAD CONFIGURATION (Multipart limits)
+  # ----------------------------------------------------------------------------
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+# ------------------------------------------------------------------------------
+# 3. JWT SECURITY CONFIGURATION
+# ------------------------------------------------------------------------------
+jwt:
+  secret: ${JWT_SECRET:pageforge_jwt_secret_dev_key_must_be_at_least_32_bytes_long_for_hs256_security}
+  refresh-secret: ${JWT_REFRESH_SECRET:pageforge_refresh_secret_dev_key_must_be_at_least_32_bytes_long_for_hs256_security}
+  access-expiration-ms: 900000 # 15 minutes (15 * 60 * 1000)
+  refresh-expiration-ms: 604800000 # 7 days (7 * 24 * 60 * 60 * 1000)
+
+# ------------------------------------------------------------------------------
+# 4. SPRING AI & GOOGLE GEMINI CONFIGURATION
+# ------------------------------------------------------------------------------
+# INSTRUCTIONS FOR USER AI SETUP:
+# 1) Obtain a Google AI Studio Gemini API Key from: https://aistudio.google.com/
+# 2) Set the environment variable GEMINI_API_KEY or replace 'your_gemini_api_key' below.
+# ------------------------------------------------------------------------------
+
+gemini:
+  api-key: ${GEMINI_API_KEY:??????}
+  text-model: ${GEMINI_TEXT_MODEL:gemini-3.5-flash-lite}
+  embedding-model: ${GEMINI_EMBEDDING_MODEL:text-embedding-004}
+
+# ------------------------------------------------------------------------------
+# 5. AWS S3 STORAGE CONFIGURATION (OPTIONAL)
+# ------------------------------------------------------------------------------
+# INSTRUCTIONS FOR USER S3 SETUP:
+# 1) If you wish to enable S3 storage for processed files, populate the variables below.
+# 2) If these variables are omitted, Page-Forge operates automatically in local disk mode.
+# ------------------------------------------------------------------------------
+aws:
+  s3:
+    access-key: ${AWS_ACCESS_KEY_ID:}
+    secret-key: ${AWS_SECRET_ACCESS_KEY:}
+    region: ${AWS_REGION:us-east-1}
+    bucket-name: ${S3_BUCKET_NAME:}
+
+# ------------------------------------------------------------------------------
+# 6. CORS ORIGINS CONFIGURATION
+# ------------------------------------------------------------------------------
+cors:
+  allowed-origins: ${FRONTEND_URL:http://localhost:5173},http://localhost:5173,http://localhost:5174,http://localhost:3000

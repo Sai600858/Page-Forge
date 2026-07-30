@@ -78,7 +78,7 @@ function App() {
                 <span className="text-slate-400 font-semibold">PAGE FORGE</span>
                 {' '}© {new Date().getFullYear()} — AI-powered document toolkit
               </p>
-              <p className="opacity-50">React · Tailwind CSS v4 · Node.js · Gemini AI · Neon PostgreSQL</p>
+              <p className="opacity-50">React · Tailwind CSS v4 · Spring Boot · MySQL · Gemini AI</p>
             </div>
           </footer>
         </div>

@@ -5,7 +5,6 @@ import {
   Menu, X, LogIn, LogOut, Clock, ChevronDown, Sparkles, MessageSquare, Lock
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import logoSrc from '../assets/Page-Forge_logo-Photoroom.png';
 
 const pagesItems = [
   { path: '/organize', name: 'Organize', icon: Grid },
@@ -72,12 +71,10 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
 
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-1 group flex-shrink-0" onClick={() => setMobileOpen(false)}>
-            <img
-              src={logoSrc}
-              alt="Page Forge"
-              className="w-16 h-16 object-contain drop-shadow-[0_0_8px_rgba(168,85,247,0.5)] group-hover:drop-shadow-[0_0_12px_rgba(168,85,247,0.8)] transition-all duration-300"
-            />
+          <Link to="/" className="flex items-center space-x-2.5 group flex-shrink-0" onClick={() => setMobileOpen(false)}>
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 via-indigo-500 to-pink-500 flex items-center justify-center border border-white/20 shadow-lg shadow-brand-500/25 group-hover:scale-105 transition-all duration-300">
+              <Layers className="w-5 h-5 text-white" />
+            </div>
             <span className="text-lg font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-white via-brand-100 to-brand-400 group-hover:to-brand-300 transition-all duration-300 uppercase">
               Page Forge
             </span>

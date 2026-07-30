@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff, ArrowRight, Sparkles, MessageSquare, ShieldAlert, Layers } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import logoSrc from '../assets/Page-Forge_logo-Photoroom.png';
 
 const features = [
   { icon: Sparkles,     text: 'AI-powered PDF summarization' },
@@ -50,8 +49,10 @@ export default function Login() {
         <div className="absolute bottom-0 right-0 w-64 h-64 bg-indigo-600/15 rounded-full blur-[80px] pointer-events-none" />
 
         {/* Logo */}
-        <div className="flex items-center space-x-2 relative z-10">
-          <img src={logoSrc} alt="Page Forge" className="w-10 h-10 object-contain drop-shadow-[0_0_8px_rgba(168,85,247,0.6)]" />
+        <div className="flex items-center space-x-2.5 relative z-10">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 via-indigo-500 to-pink-500 flex items-center justify-center border border-white/20 shadow-lg shadow-brand-500/25">
+            <Layers className="w-5 h-5 text-white" />
+          </div>
           <span className="text-lg font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-white via-brand-100 to-brand-400 uppercase">Page Forge</span>
         </div>
 
@@ -92,8 +93,10 @@ export default function Login() {
 
         <div className="w-full max-w-sm relative z-10">
           {/* Mobile logo */}
-          <div className="flex lg:hidden items-center justify-center space-x-1 mb-8">
-            <img src={logoSrc} alt="Page Forge" className="w-12 h-12 object-contain drop-shadow-[0_0_10px_rgba(168,85,247,0.6)]" />
+          <div className="flex lg:hidden items-center justify-center space-x-2.5 mb-8">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 via-indigo-500 to-pink-500 flex items-center justify-center border border-white/20 shadow-lg shadow-brand-500/25">
+              <Layers className="w-6 h-6 text-white" />
+            </div>
             <span className="text-xl font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-white via-brand-100 to-brand-400 uppercase">Page Forge</span>
           </div>
 
