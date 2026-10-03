@@ -63,7 +63,7 @@ jobs:
             # Run the new container
             docker run -d \
               --name page-forge-backend \
-              -p 5001:5001 \
+              --net=host \
               --restart always \
               -v /var/www/uploads:/app/uploads \
               --env-file /home/${{ secrets.EC2_USERNAME }}/.env \
