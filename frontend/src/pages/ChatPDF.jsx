@@ -169,11 +169,17 @@ export default function ChatPDF() {
       // Add a placeholder for assistant response
       setMessages(prev => [...prev, { role: 'assistant', content: '', timestamp: new Date().toISOString() }]);
 
+      const token = localStorage.getItem('access_token');
+      const headers = {
+        'Content-Type': 'application/json',
+      };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const response = await fetch(url, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers,
         credentials: 'include',
         signal: abortController.signal,
         body: JSON.stringify({
