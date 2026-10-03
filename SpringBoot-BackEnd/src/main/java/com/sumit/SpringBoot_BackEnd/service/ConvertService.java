@@ -90,16 +90,21 @@ public class ConvertService {
 
                 pdfBytes = Files.readAllBytes(tempPdf);
             } else {
-                ProcessBuilder pb = new ProcessBuilder("soffice", "--headless", "--convert-to", "pdf", "--outdir", tempInputDir.toAbsolutePath().toString(), tempDocx.toAbsolutePath().toString());
-                Process process = pb.start();
-                int exitCode = process.waitFor();
+                try {
+                    ProcessBuilder pb = new ProcessBuilder("soffice", "--headless", "--convert-to", "pdf", "--outdir", tempInputDir.toAbsolutePath().toString(), tempDocx.toAbsolutePath().toString());
+                    Process process = pb.start();
+                    int exitCode = process.waitFor();
 
-                Path libreOfficeOutput = tempInputDir.resolve("input.pdf");
-                if (exitCode != 0 || !Files.exists(libreOfficeOutput)) {
-                    String errOutput = new String(process.getErrorStream().readAllBytes(), StandardCharsets.UTF_8);
-                    throw new RuntimeException("LibreOffice conversion failed: " + errOutput);
+                    Path libreOfficeOutput = tempInputDir.resolve("input.pdf");
+                    if (exitCode == 0 && Files.exists(libreOfficeOutput)) {
+                        pdfBytes = Files.readAllBytes(libreOfficeOutput);
+                    } else {
+                        pdfBytes = convertDocxToPdfPureJava(tempDocx.toFile());
+                    }
+                } catch (Exception libreOfficeError) {
+                    log.warn("[ConvertService] LibreOffice not available, using Pure Java fallback: {}", libreOfficeError.getMessage());
+                    pdfBytes = convertDocxToPdfPureJava(tempDocx.toFile());
                 }
-                pdfBytes = Files.readAllBytes(libreOfficeOutput);
             }
 
             String baseName = originalName.substring(0, originalName.lastIndexOf("."));
@@ -169,6 +174,42 @@ public class ConvertService {
         } catch (Exception e) {
             log.error("[ConvertService] PDF to Word error: ", e);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to convert PDF to Word: " + e.getMessage());
+        }
+    }
+
+    private byte[] convertDocxToPdfPureJava(File docxFile) {
+        try (FileInputStream fis = new FileInputStream(docxFile);
+             XWPFDocument docx = new XWPFDocument(fis);
+             PDDocument pdfDoc = new PDDocument()) {
+
+            org.apache.pdfbox.pdmodel.PDPage page = new org.apache.pdfbox.pdmodel.PDPage();
+            pdfDoc.addPage(page);
+
+            try (org.apache.pdfbox.pdmodel.PDPageContentStream contentStream =
+                         new org.apache.pdfbox.pdmodel.PDPageContentStream(pdfDoc, page)) {
+
+                contentStream.setFont(org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA, 12);
+                contentStream.beginText();
+                contentStream.newLineAtOffset(50, 750);
+                float leading = 14.5f;
+
+                for (XWPFParagraph p : docx.getParagraphs()) {
+                    String text = p.getText();
+                    if (text != null && !text.trim().isEmpty()) {
+                        String cleanText = text.replaceAll("[^\\x20-\\x7E]", " ");
+                        contentStream.showText(cleanText);
+                        contentStream.newLineAtOffset(0, -leading);
+                    }
+                }
+                contentStream.endText();
+            }
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            pdfDoc.save(baos);
+            return baos.toByteArray();
+        } catch (Exception e) {
+            log.error("[ConvertService] Pure Java DOCX to PDF fallback failed: ", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to convert Word document to PDF: " + e.getMessage());
         }
     }
 

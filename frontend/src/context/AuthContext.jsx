@@ -17,18 +17,29 @@ export function AuthProvider({ children }) {
 
   const register = async ({ name, email, password }) => {
     const res = await api.post('/api/auth/register', { name, email, password });
+    if (res.data && res.data.accessToken) {
+      localStorage.setItem('access_token', res.data.accessToken);
+    }
     setUser(res.data.user);
     return res.data;
   };
 
   const login = async ({ email, password }) => {
     const res = await api.post('/api/auth/login', { email, password });
+    if (res.data && res.data.accessToken) {
+      localStorage.setItem('access_token', res.data.accessToken);
+    }
     setUser(res.data.user);
     return res.data;
   };
 
   const logout = async () => {
-    await api.post('/api/auth/logout');
+    try {
+      await api.post('/api/auth/logout');
+    } catch (e) {
+      // Ignore network errors during logout
+    }
+    localStorage.removeItem('access_token');
     setUser(null);
   };
 

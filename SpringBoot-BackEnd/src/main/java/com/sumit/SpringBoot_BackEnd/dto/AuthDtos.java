@@ -98,11 +98,13 @@ public class AuthDtos {
     public static class AuthResponse {
         private String message;
         private UserDto user;
+        private String accessToken;
 
         public AuthResponse() {}
-        public AuthResponse(String message, UserDto user) {
+        public AuthResponse(String message, UserDto user, String accessToken) {
             this.message = message;
             this.user = user;
+            this.accessToken = accessToken;
         }
 
         public String getMessage() { return message; }
@@ -111,17 +113,22 @@ public class AuthDtos {
         public UserDto getUser() { return user; }
         public void setUser(UserDto user) { this.user = user; }
 
+        public String getAccessToken() { return accessToken; }
+        public void setAccessToken(String accessToken) { this.accessToken = accessToken; }
+
         public static Builder builder() { return new Builder(); }
 
         public static class Builder {
             private String message;
             private UserDto user;
+            private String accessToken;
 
             public Builder message(String message) { this.message = message; return this; }
             public Builder user(UserDto user) { this.user = user; return this; }
+            public Builder accessToken(String accessToken) { this.accessToken = accessToken; return this; }
 
             public AuthResponse build() {
-                return new AuthResponse(message, user);
+                return new AuthResponse(message, user, accessToken);
             }
         }
     }

@@ -58,6 +58,7 @@ public class AuthService {
         return AuthResponse.builder()
                 .message("Account created successfully.")
                 .user(userDto)
+                .accessToken(accessToken)
                 .build();
     }
 
@@ -88,6 +89,7 @@ public class AuthService {
         return AuthResponse.builder()
                 .message("Logged in successfully.")
                 .user(userDto)
+                .accessToken(accessToken)
                 .build();
     }
 

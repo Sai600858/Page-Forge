@@ -7,6 +7,15 @@ const api = axios.create({
   withCredentials: true,   // Required: sends HTTP-only auth cookies cross-origin
 });
 
+// Request interceptor to attach Bearer token from localStorage for 100% reliable cross-domain auth
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('access_token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 // Response interceptor to handle Blob errors (status 400/500 returns error as JSON inside a Blob)
 api.interceptors.response.use(
   (response) => response,
