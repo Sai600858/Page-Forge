@@ -188,7 +188,7 @@ public class ConvertService {
             try (org.apache.pdfbox.pdmodel.PDPageContentStream contentStream =
                          new org.apache.pdfbox.pdmodel.PDPageContentStream(pdfDoc, page)) {
 
-                contentStream.setFont(org.apache.pdfbox.pdmodel.font.PDType1Font.HELVETICA, 12);
+                contentStream.setFont(new org.apache.pdfbox.pdmodel.font.PDType1Font(org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName.HELVETICA), 12);
                 contentStream.beginText();
                 contentStream.newLineAtOffset(50, 750);
                 float leading = 14.5f;
